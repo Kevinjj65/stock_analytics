@@ -11,6 +11,7 @@ from fastapi import FastAPI                           # FastAPI is the web frame
 from fastapi.middleware.cors import CORSMiddleware    # CORS middleware allows the React frontend to call this API from a different port/domain
 from contextlib import asynccontextmanager            # asynccontextmanager lets us define async startup and shutdown logic cleanly
 from app.core.config import settings                  # Import the shared settings object to read ENVIRONMENT and other config values
+from app.api.v1.router import api_router              # Import the v1 router that contains all registered endpoint groups (stocks, analytics, etc.)
 
 
 # ---------------------------------------------------------------------------
@@ -78,6 +79,19 @@ app.add_middleware(
 # Used by UptimeRobot to monitor uptime, and by Docker health checks.
 # Returns immediately without hitting the database so it always responds fast.
 # ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# API ROUTER — /api/v1/...
+# All feature routes (stocks, analytics, auth, etc.) are served under /api/v1/.
+# The router is defined in app/api/v1/router.py and imports each endpoint module.
+# Adding new feature areas only requires updating router.py — no changes here.
+# ---------------------------------------------------------------------------
+
+app.include_router(                              # Register the v1 router on the FastAPI app
+    api_router,                                  # The router imported from app/api/v1/router.py
+    prefix="/api/v1",                            # All routes in api_router are prefixed with /api/v1 (e.g. /api/v1/stocks/)
+)
+
 
 @app.get(                                        # Register a GET route on the path below
     "/health",                                   # The URL path for this endpoint: GET /health

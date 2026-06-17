@@ -7,6 +7,7 @@ sqlalchemy==2.0.36
 alembic==1.14.0
 asyncpg==0.30.0
 psycopg2-binary==2.9.10
+greenlet==3.1.1              # Required by SQLAlchemy async extension (greenlet_spawn)
 
 # Auth & security
 python-jose[cryptography]==3.3.0
